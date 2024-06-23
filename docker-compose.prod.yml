@@ -1,0 +1,82 @@
+services:
+  django:
+    container_name: sagaart-django
+    build:
+      context: .
+      dockerfile: .docker/django/Dockerfile
+      args:
+        DEPENDENCIES_DIR: /backend/sagaart_backend
+        SCRIPT_DIR: /.docker/django
+    restart: always
+    expose:
+      - 8000
+    command: >
+      sh -c "gunicorn -bind 0.0.0.0:8000 sagaart_backend.wsgi.py"
+    depends_on:
+      - postgres
+    volumes:
+      - ./backend/sagaart_backend:/usr/src/app/
+      - ./backend/sagaart_backend/static:/usr/src/app/static
+    networks:
+      - sagaart_network
+    env_file:
+      - ./.env
+
+  node:
+    container_name: sagaart-node
+    build:
+      context: ./frontend
+      dockerfile: ../.docker/react/Dockerfile
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend/public/:/usr/src/app/public/
+      - ./frontend/src/:/usr/src/app/src/
+    command: npm start
+    depends_on:
+      - django
+    networks:
+      - sagaart_network
+
+  postgres:
+    container_name: sagaart-postgres
+    image: postgres:${POSTGRES_VERSION:-15}-alpine
+    ports:
+      - "${PG_EXTERNAL_PORT:-54321}:5432"
+    expose:
+      - "${PG_EXTERNAL_PORT:-54321}"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-app}
+      # You should definitely change the password in production
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-!ChangeMe!}
+      POSTGRES_USER: ${POSTGRES_USER:-app}
+    volumes:
+      - sagaart_postgres_volume:/var/lib/postgresql/data/
+    networks:
+      - sagaart_network
+    env_file:
+      - ./.env
+
+  nginx:
+    container_name: sagaart-nginx
+    build:
+      context: .
+      dockerfile: .docker/nginx/Dockerfile
+      args:
+        CONF_DIR: /.docker/nginx
+    networks:
+      - sagaart_network
+    ports:
+      - "8899:80"
+    depends_on:
+      - django
+    volumes:
+      - ./backend/sagaart_backend/static:/home/src/app/static
+
+volumes:
+  sagaart_postgres_volume:
+
+networks:
+  sagaart_network:
+    driver: bridge

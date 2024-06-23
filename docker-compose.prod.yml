@@ -18,8 +18,6 @@ services:
       - ./backend/sagaart_backend:/usr/src/app/
       - sagaart_static_volume:/usr/src/app/static
       - sagaart_media_volume:/usr/src/app/media
-    networks:
-      - sagaart_network
     env_file:
       - ./.env
 
@@ -37,8 +35,6 @@ services:
     command: npm start
     depends_on:
       - django
-    networks:
-      - sagaart_network
 
   postgres:
     container_name: sagaart-postgres
@@ -54,16 +50,12 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-app}
     volumes:
       - sagaart_postgres_volume:/var/lib/postgresql/data/
-    networks:
-      - sagaart_network
     env_file:
       - ./.env
 
   nginx:
     container_name: sagaart-nginx
     image: nginx:1.19.3
-    networks:
-      - sagaart_network
     ports:
       - "8899:80"
     depends_on:
@@ -77,8 +69,3 @@ volumes:
   sagaart_postgres_volume:
   sagaart_static_volume:
   sagaart_media_volume:
-
-
-networks:
-  sagaart_network:
-    driver: bridge

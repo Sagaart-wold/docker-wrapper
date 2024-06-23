@@ -8,8 +8,8 @@ services:
         DEPENDENCIES_DIR: /backend/sagaart_backend
         SCRIPT_DIR: /.docker/django
     restart: always
-    expose:
-      - 8000
+    ports:
+      "8000:8000"
     command: >
       sh -c "gunicorn -bind 0.0.0.0:8000 sagaart_backend.wsgi.py"
     depends_on:

@@ -69,6 +69,7 @@ services:
     depends_on:
       - django
     volumes:
+      - ./.docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
       - ./backend/sagaart_backend/static:/home/src/app/static
       - ./backend/sagaart_backend/media:/home/src/app/media
 

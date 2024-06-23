@@ -9,14 +9,15 @@ services:
         SCRIPT_DIR: /.docker/django
     restart: always
     ports:
-      "8000:8000"
+      - "8000:8000"
     command: >
-      sh -c "gunicorn -bind 0.0.0.0:8000 sagaart_backend.wsgi.py"
+      sh -c "gunicorn --bind 0.0.0.0:8000 sagaart_backend.wsgi"
     depends_on:
       - postgres
     volumes:
       - ./backend/sagaart_backend:/usr/src/app/
       - ./backend/sagaart_backend/static:/usr/src/app/static
+      - ./backend/sagaart_backend/media:/usr/src/app/media
     networks:
       - sagaart_network
     env_file:
@@ -60,11 +61,7 @@ services:
 
   nginx:
     container_name: sagaart-nginx
-    build:
-      context: .
-      dockerfile: .docker/nginx/Dockerfile
-      args:
-        CONF_DIR: /.docker/nginx
+    image: nginx:1.19.3
     networks:
       - sagaart_network
     ports:
@@ -72,7 +69,9 @@ services:
     depends_on:
       - django
     volumes:
+      - ./.docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
       - ./backend/sagaart_backend/static:/home/src/app/static
+      - ./backend/sagaart_backend/media:/home/src/app/media
 
 volumes:
   sagaart_postgres_volume:

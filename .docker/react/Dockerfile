@@ -7,3 +7,5 @@ RUN yarn install
 
 ADD ./public ./public
 ADD ./src ./src
+
+RUN yarn run build

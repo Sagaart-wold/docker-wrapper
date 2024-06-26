@@ -30,7 +30,7 @@ services:
       - "3000:3000"
     volumes:
       - sagaart_static_volume:/usr/src/app/static/
-    command: cp -r /usr/src/app/dist/ /usr/src/app/static/
+    command: cp -r /usr/src/app/dist/* /usr/src/app/static/
     depends_on:
       - django
 

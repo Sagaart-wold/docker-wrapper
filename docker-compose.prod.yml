@@ -33,7 +33,7 @@ services:
       - ./frontend/public/:/usr/src/app/public/
       - ./frontend/src/:/usr/src/app/src/
       - sagaart_static_volume:/usr/src/app/static/
-    command: cp -r /app/dist/. /static/
+    command: cp -r /dist/. /static/
     depends_on:
       - django
 

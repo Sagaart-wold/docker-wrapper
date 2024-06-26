@@ -26,12 +26,11 @@ services:
     build:
       context: ./frontend
       dockerfile: ../.docker/react/Dockerfile
-    restart: always
     ports:
       - "3000:3000"
     volumes:
       - sagaart_static_volume:/usr/src/app/static/
-    command: pwd #cp -r /dist/ /static/
+    command: pwd #cp -r /usr/src/app/dist/ /static/
     depends_on:
       - django
 

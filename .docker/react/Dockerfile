@@ -1,9 +1,9 @@
 FROM node:20-slim as build
 
 WORKDIR /usr/src/app
-RUN mkdir -p $WORKDIR/static
 
-COPY . .
+ADD *.json ./
 RUN yarn install
 
-RUN yarn run build
+ADD ./public ./public
+ADD ./src ./src

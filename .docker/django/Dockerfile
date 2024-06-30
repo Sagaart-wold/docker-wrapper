@@ -6,11 +6,7 @@ RUN mkdir -p $WORKDIR/static
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-RUN apt-get update && apt-get install -y netcat-traditional
-
 RUN pip install --upgrade pip
-
-RUN pip install gunicorn==20.1.0
 
 ARG DEPENDENCIES_DIR
 COPY $DEPENDENCIES_DIR/requirements.txt .

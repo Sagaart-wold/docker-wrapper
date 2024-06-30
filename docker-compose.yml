@@ -29,11 +29,11 @@ services:
       dockerfile: ../.docker/react/Dockerfile
     restart: always
     ports:
-      - "3000:3000"
+      - "5173:5173"
     volumes:
       - ./frontend/public/:/usr/src/app/public/
       - ./frontend/src/:/usr/src/app/src/
-    command: npm start
+    command: yarn dev
     depends_on:
       - django
     networks:

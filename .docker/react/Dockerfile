@@ -1,4 +1,4 @@
-FROM node:18-slim as build
+FROM node:20-slim as build
 
 WORKDIR /usr/src/app
 RUN mkdir -p $WORKDIR/static
